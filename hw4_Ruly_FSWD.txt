@@ -1,3 +1,6 @@
+Link Repo
+https://github.com/rulyabdulrasyid/hw4RakaminFSWD
+
 //  Deklarasi Array 100 bilangan random (1 - 50)
 let arrayBilanganRandom = [];
 let arrayGenap = [];
