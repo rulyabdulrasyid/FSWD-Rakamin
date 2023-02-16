@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tugas HW5 Ruly Abdul Rasyid_FSWD Rakamin</title>
+    <style>
+      * {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      h1,
+      p {
+        text-align: center;
+      }
+      body {
+        position: relative;
+        padding: 0 200px;
+        /* font-size: 1.3rem; */
+        text-align: center;
+        margin: 0 auto;
+        font-size: 1.5rem;
+      }
+      input,
+      label {
+        display: block;
+        text-align: center;
+        position: relative;
+        /* margin-top: 10px; */
+        margin: 5px auto;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      button {
+        margin-top: 20px;
+        font-size: 20px;
+        border-radius: 10px;
+        padding: 5px 20px;
+      }
+      input {
+        padding: 10px;
+        width: 100%;
+        border-radius: 50px;
+      }
+      table {
+        width: 100%;
+        /* border: 1px solid black; */
+        margin-top: 20px;
+        justify-content: space-between;
+      }
+      th {
+        padding: 10px;
+        background-color: aliceblue;
+        border: 1px solid black;
+      }
+      td {
+        padding: 10px;
+        /* background-color: aliceblue; */
+        border: 1px solid black;
+      }
+      .resume {
+        font-size: 25px;
+        background-color: #1e1e1e;
+        color: white;
+        padding: 30px;
+        border-radius: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Judul Form -->
+      <h1 id="title">FORMULIR REGISTRASI PENDATAAN UANG SANGU</h1>
+      <p>Isi data berikut ini! pastikan data sesuai dengan kriteria isian yang disyaratkan!</p>
+
+      <!-- Form -->
+      <form id="tab_registrasi" class="tab_registrasi">
+        <label for="">Nama<input type="text" class="nama" required placeholder="Nama Lengkap Anda" /></label>
+        <label for="">Umur <input type="text" class="umur" required placeholder="Umur Anda" /></label>
+        <label for="">Uang Sangu<input type="text" class="uang_saku" required placeholder="100.000 - 1.000.000" /></label>
+      </form>
+      <!-- <button id="periksa">Periksa</button>
+    <label for="" class="hasil_periksa"></label> -->
+      <button id="submit" class="submit">Submit</button>
+
+      <!-- Table -->
+      <table>
+        <thead>
+          <tr>
+            <th>Nama</th>
+            <th>Umur</th>
+            <th>Uang Sangu</th>
+          </tr>
+        </thead>
+        <tbody id="list_pendaftar"></tbody>
+      </table>
+
+      <!-- Resume -->
+      <div id="resume">
+        <p id="hasil_resume" class="resume">Rata-rata pendaftar memiliki uang Sangu Rp. <span id="average_uang_saku">0</span> dengan rata-rata umur <span id="average_umur">0 tahun.</span></p>
+      </div>
+
+      <script>
+        const nama = document.querySelector(".nama").value;
+
+        const umur = document.querySelector(".umur").value;
+        const uang_saku = document.querySelector(".uang_saku").value;
+        // const periksa = document.getElementById("periksa");
+        const submit = document.getElementById("submit");
+
+        const arrNama = [];
+        const arrUmur = [];
+        const arrUangSaku = [];
+
+        submit.addEventListener("click", function () {
+          const nama = document.querySelector(".nama").value;
+          const umur = document.querySelector(".umur").value;
+          const uang_saku = document.querySelector(".uang_saku").value;
+
+          arrNama.push(nama);
+          arrUmur.push(parseInt(umur));
+          arrUangSaku.push(parseInt(uang_saku));
+
+          class regis {
+            constructor(nama, umur, uang_saku) {
+              this.nama = nama;
+              this.umur = umur;
+              this.uang_saku = uang_saku;
+            }
+          }
+
+          const data_regis = new regis(nama, umur, uang_saku);
+          console.log(data_regis);
+
+          if (nama.length >= 10 && umur >= 25 && uang_saku >= 100000 && uang_saku <= 1000000) {
+            console.log("oke");
+
+            const list_baru = document.createElement("tr");
+            const isi_list_nama = document.createElement("td");
+            const isi_nama = document.createTextNode(nama);
+            isi_list_nama.appendChild(isi_nama);
+            list_baru.appendChild(isi_list_nama);
+
+            const isi_list_umur = document.createElement("td");
+            const isi_umur = document.createTextNode(umur);
+            isi_list_umur.appendChild(isi_umur);
+            list_baru.appendChild(isi_list_umur);
+
+            const isi_list_uang_saku = document.createElement("td");
+            const isi_uang_saku = document.createTextNode("Rp." + uang_saku);
+            isi_list_uang_saku.appendChild(isi_uang_saku);
+            list_baru.appendChild(isi_list_uang_saku);
+
+            const list_pendaftar = document.getElementById("list_pendaftar");
+            list_pendaftar.appendChild(list_baru);
+            console.log(arrNama);
+            console.log(arrUmur);
+            console.log(arrUangSaku);
+
+            let avUmur = 0;
+            for (let i = 0; i < arrUmur.length; i++) {
+              avUmur += arrUmur[i] / arrUmur.length;
+            }
+
+            let avUangSaku = 0;
+            for (let i = 0; i < arrUangSaku.length; i++) {
+              avUangSaku += arrUangSaku[i] / arrUangSaku.length;
+            }
+
+            // const teksP = document.createTextNode(avUmur);
+            const average_umur = document.getElementById("average_umur");
+            average_umur.innerHTML = Math.floor(avUmur);
+            const average_uang_saku = document.getElementById("average_uang_saku");
+            average_uang_saku.innerHTML = Math.floor(avUangSaku);
+          } else {
+            alert("Isi dengan Betul");
+          }
+        });
+      </script>
+    </div>
+  </body>
+</html>
