@@ -1,0 +1,206 @@
+HW 8
+RULY ABDUL RASYID
+
+REPO:
+https://github.com/rulyabdulrasyid/HW-FSWD-Rakamin-Ruly
+
+STEP 1 = Restore Sampel Data "dvdrental"
+
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+psql (15.1)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# CREATE DATABASE dvdrental;
+CREATE DATABASE
+postgres=# \l
+                                                                  List of databa
+ses
+     Name     |  Owner   | Encoding |          Collate           |           Cty
+pe            | ICU Locale | Locale Provider |   Access privileges
+--------------+----------+----------+----------------------------+--------------
+--------------+------------+-----------------+-----------------------
+ dvdrental    | postgres | UTF8     | English_United States.1252 | English_Unite
+d States.1252 |            | libc            |
+ hw6          | postgres | UTF8     | English_United States.1252 | English_Unite
+d States.1252 |            | libc            |
+ latihanweek8 | postgres | UTF8     | English_United States.1252 | English_Unite
+d States.1252 |            | libc            |
+ mydb         | postgres | UTF8     | English_United States.1252 | English_Unite
+d States.1252 |            | libc            |
+ postgres     | postgres | UTF8     | English_United States.1252 | English_Unite
+d States.1252 |            | libc            |
+ rakamin      | postgres | UTF8     | English_United States.1252 | English_Unite
+d States.1252 |            | libc            |
+ template0    | postgres | UTF8     | English_United States.1252 | English_Unite
+d States.1252 |            | libc            | =c/postgres          +
+              |          |          |                            |
+              |            |                 | postgres=CTc/postgres
+ template1    | postgres | UTF8     | English_United States.1252 | English_Unite
+d States.1252 |            | libc            | =c/postgres          +
+              |          |          |                            |
+              |            |                 | postgres=CTc/postgres
+(8 rows)
+
+postgres-# \c dvdrental;
+You are now connected to database "dvdrental" as user "postgres".
+dvdrental-#
+
+// Dilanjutkan dengan restore sample data menggunakan pgAdmin (dokumentasi gambar 1)
+// Melakukan pengecekan Setelah restore berhasil.
+
+dvdrental-# \dt
+             List of relations
+ Schema |     Name      | Type  |  Owner
+--------+---------------+-------+----------
+ public | actor         | table | postgres
+ public | address       | table | postgres
+ public | category      | table | postgres
+ public | city          | table | postgres
+ public | country       | table | postgres
+ public | customer      | table | postgres
+ public | film          | table | postgres
+ public | film_actor    | table | postgres
+ public | film_category | table | postgres
+ public | inventory     | table | postgres
+ public | language      | table | postgres
+ public | payment       | table | postgres
+ public | rental        | table | postgres
+ public | staff         | table | postgres
+ public | store         | table | postgres
+(15 rows)
+
+// Data sudah masuk
+
+STEP 2 = Membuat Aplikasi Express (HASIL PADA FILE CODE)
+
+comp@comp-PC MINGW64 /f/RULY ABDUL RASYID/BELAJAR/PROGRAMER/bootcamp/rakamin_FSWD/WEEK 8 - Express JS & Data Integration/hw8
+$ npm i --save express
+
+added 57 packages in 10s
+
+7 packages are looking for funding
+  run `npm fund` for details
+
+comp@comp-PC MINGW64 /f/RULY ABDUL RASYID/BELAJAR/PROGRAMER/bootcamp/rakamin_FSWD/WEEK 8 - Express JS & Data Integration/hw8
+$ npm i -g nodemon
+
+changed 32 packages in 4s
+
+3 packages are looking for funding
+  run `npm fund` for details
+
+comp@comp-PC MINGW64 /f/RULY ABDUL RASYID/BELAJAR/PROGRAMER/bootcamp/rakamin_FSWD/WEEK 8 - Express JS & Data Integration/hw8
+$ npm i --save pg
+
+added 15 packages, and audited 73 packages in 6s
+
+7 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+
+SOAL NOMER 1 => Melakukan Seeding 5 data baru Actor
+
+// seeding.js
+var pool = require("../queries.js");
+var fs = require("fs");
+
+const seedQuery = fs.readFileSync("db/seeding.sql", { encoding: "utf-8" });
+
+pool.query(seedQuery, (err, res) => {
+  console.log(err);
+  console.log("Seeding Berhasil");
+  pool.end();
+});
+
+// seeding.sql
+INSERT INTO actor (first_name, last_name)
+VALUES ('Ruly','Abdul'), ('Rizky','Mulyana'), ('Dzamar','Fazril'), ('Muhamad','Apriyansyah'), ('Preddi','Muhammad');
+
+// Cek data di database
+
+dvdrental=# select * from actor;
+ actor_id | first_name  |  last_name   |        last_update
+----------+-------------+--------------+----------------------------
+        1 | Penelope    | Guiness      | 2013-05-26 14:47:57.62
+        2 | Nick        | Wahlberg     | 2013-05-26 14:47:57.62
+        3 | Ed          | Chase        | 2013-05-26 14:47:57.62
+        
+      201 | Ruly        | Abdul        | 2023-02-24 11:29:21.228804
+      202 | Rizky       | Mulyana      | 2023-02-24 11:29:21.228804
+      203 | Dzamar      | Fazril       | 2023-02-24 11:29:21.228804
+      204 | Muhamad     | Apriyansyah  | 2023-02-24 11:29:21.228804
+      205 | Preddi      | Muhammad     | 2023-02-24 11:29:21.228804
+(205 rows)
+
+
+SOAL NOMER 2
+
+// find data all film
+router.get("/film", (req, res) => {
+  pool.query("SELECT * FROM film", (err, results) => {
+    if (err) throw err;
+    res.status(200).json(results.rows);
+  });
+});
+
+// find film data from id film
+router.get("/film/:id", (req, res) => {
+  const { id } = req.params;
+  const findQueries = `
+    SELECT * FROM film WHERE film_id=$1`;
+  pool.query(findQueries, [id], (err, results) => {
+    if (err) throw err;
+    res.status(200).json(results.rows[0]);
+  });
+});
+
+// find list of category
+router.get("/category", (req, res) => {
+  pool.query("SELECT category.name as daftar_category FROM category", (err, results) => {
+    if (err) throw err;
+    res.status(200).json(results.rows);
+  });
+});
+
+// find film by category name
+router.get("/category/:name", (req, res) => {
+  const { name } = req.params;
+  const findQueries = `
+    SELECT 
+    category.name as category, 
+      film.film_id as id_film,
+      film.title as title_film,
+      film.release_year as year     
+    from film
+    join film_category 
+    on film_category.film_id=film.film_id
+    join category 
+    on category.category_id = film_category.category_id 
+    where category.name = '${name}'
+    `;
+  pool.query(findQueries, (err, results) => {
+    if (err) throw err;
+    res.status(200).json(results.rows);
+  });
+});
+
+
+SOAL NOMER 3 => Migrasi Data
+
+/* Replace with your SQL commands */
+ALTER TABLE Actor
+ADD COLUMN age INTEGER;
+
+ALTER TABLE Actor
+DROP COLUMN age;
+
+
