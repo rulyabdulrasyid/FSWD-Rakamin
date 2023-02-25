@@ -10,13 +10,6 @@ router.get("/film", (req, res) => {
   });
 });
 
-router.get("/actor", (req, res) => {
-  pool.query("SELECT * FROM actor", (err, results) => {
-    if (err) throw err;
-    res.status(200).json(results.rows);
-  });
-});
-
 // find film data from id film
 router.get("/film/:id", (req, res) => {
   const { id } = req.params;
