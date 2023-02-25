@@ -1,5 +1,0 @@
-Link Repo FSWD-Rakamin
-https://github.com/rulyabdulrasyid/FSWD-Rakamin
-
-Link Repo HW 7
-https://github.com/rulyabdulrasyid/FSWD-Rakamin/tree/main/hw7
