@@ -2,11 +2,16 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../queries.js");
 const { authorization } = require("../middlewares/auth.js");
+const default_limit = 10;
+const default_page = 1;
 
 // Get all movies =>>>>> 100 movies
 router.get("/movies", (req, res, next) => {
-  console.log(req.loggedUser);
-  const query = `SELECT * FROM movies order by movies.id`;
+  const { limit, page } = req.query;
+  let resultLimit = limit ? +limit : default_limit;
+  let resultPage = page ? +page : default_page;
+  console.log(default_limit, default_page);
+  const query = `SELECT * FROM movies order by movies.id LIMIT ${resultLimit} OFFSET ${(resultPage - 1) * resultLimit}`;
   pool.query(query, (err, result) => {
     if (err) next(err);
     res.status(200).json(result.rows);
