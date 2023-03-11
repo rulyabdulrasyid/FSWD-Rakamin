@@ -6,14 +6,14 @@ const default_limit = 10;
 const default_page = 1;
 
 // Get all movies =>>>>> 100 movies
-router.get("/movies", (req, res, next) => {
+router.get("/movies", (req, res) => {
   const { limit, page } = req.query;
   let resultLimit = limit ? +limit : default_limit;
   let resultPage = page ? +page : default_page;
   console.log(default_limit, default_page);
   const query = `SELECT * FROM movies order by movies.id LIMIT ${resultLimit} OFFSET ${(resultPage - 1) * resultLimit}`;
   pool.query(query, (err, result) => {
-    if (err) next(err);
+    if (err) throw err;
     res.status(200).json(result.rows);
   });
 });
