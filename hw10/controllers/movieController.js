@@ -27,6 +27,29 @@ class MoviesController {
       next(err);
     }
   };
+  // static updateMovie = async (req, res, next) => {
+  //   try {
+  //     const { id } = req.params;
+  //     const
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // };
+  static deleteMovie = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const data = await MovieService.deleteMovie(id, next);
+      if (data) {
+        res.status(200).json({ message: "Deleted Successfully" });
+        return data;
+      } else {
+        next({ name: "ErrorNotFound" });
+      }
+      res.status(200).json(data);
+    } catch (err) {
+      next(err);
+    }
+  };
 }
 
 module.exports = MoviesController;

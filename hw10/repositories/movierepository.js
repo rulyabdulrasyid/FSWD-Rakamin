@@ -25,6 +25,14 @@ class MovieRepository {
       next(err);
     }
   };
+  static deleteMovie = async (id, next) => {
+    try {
+      const data = await Movie.deleteMovie(id, next);
+      return data;
+    } catch (err) {
+      next(err);
+    }
+  };
 }
 
 module.exports = MovieRepository;

@@ -32,6 +32,16 @@ class Movies {
       next(err);
     }
   };
+  static deleteMovie = async (id, next) => {
+    try {
+      // console.log(id);
+      const deleteQuery = `DELETE FROM movies WHERE id=$1`;
+      const data = await pool.query(deleteQuery, [id]);
+      return data.rows[0];
+    } catch (err) {
+      next(err);
+    }
+  };
 }
 
 module.exports = Movies;
